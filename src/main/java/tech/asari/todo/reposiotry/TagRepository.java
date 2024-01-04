@@ -46,12 +46,19 @@ public class TagRepository implements ITagRepository {
 
     @Override
     public void createTagMaps(List<TagMap> tagMaps) {
-        String values = tagMaps
-                .stream()
-                .map(tagMap -> "(" + tagMap.taskId() + ", " + tagMap.tagId() + ")")
-                .collect(Collectors.joining(", "));
-        client.sql("INSERT INTO tag_maps (task_id, tag_id) VALUES ?")
-                .param(values)
-                .update();
+        tagMaps.forEach(tagMap ->
+                client.sql("INSERT INTO tag_maps (task_id, tag_id) VALUES (:task_id, :tag_id)")
+                        .param("task_id", tagMap.taskId())
+                        .param("tag_id", tagMap.tagId())
+                        .update());
+    }
+
+    @Override
+    public void deleteTagMaps(List<TagMap> tagMaps) {
+        tagMaps.forEach(tagMap ->
+                client.sql("DELETE FROM tag_maps WHERE task_id = :task_id AND tag_id = :tag_id")
+                        .param("task_id", tagMap.taskId())
+                        .param("tag_id", tagMap.tagId())
+                        .update());
     }
 }

@@ -11,4 +11,6 @@ public interface ITagRepository {
     List<Integer> getTagMaps(int taskId);
 
     void createTagMaps(List<TagMap> tagMaps);
+
+    void deleteTagMaps(List<TagMap> tagMaps);
 }

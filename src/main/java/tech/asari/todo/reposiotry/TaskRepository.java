@@ -99,7 +99,7 @@ public class TaskRepository implements ITaskRepository {
                 .param("due_date", task.dueDate())
                 .update();
 
-        return get(task.id());
+        return get(id);
     }
 
     @Override
