@@ -1,7 +1,9 @@
 package tech.asari.todo.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tech.asari.todo.controller.domain.RequestPostTask;
+import org.springframework.web.server.ResponseStatusException;
+import tech.asari.todo.controller.domain.RequestTask;
 import tech.asari.todo.controller.domain.ResponseTask;
 import tech.asari.todo.reposiotry.ITagRepository;
 import tech.asari.todo.reposiotry.ITaskRepository;
@@ -10,6 +12,7 @@ import tech.asari.todo.reposiotry.domain.Task;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {
@@ -30,23 +33,25 @@ public class TaskService implements ITaskService {
 
     @Override
     public ResponseTask getTask(int id) {
-        Task task = taskRepo.get(id);
+        Optional<Task> task = taskRepo.get(id);
+        if (task.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+
         List<Integer> tagMaps = tagRepo.getTagMaps(id);
-        return new ResponseTask(task, tagMaps);
+        return new ResponseTask(task.get(), tagMaps);
     }
 
     @Override
-    public ResponseTask postTask(RequestPostTask requestPostTask) {
-        Task task = taskRepo.create(Task.of(requestPostTask));
-        tagRepo.createTagMaps(requestPostTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
-        return new ResponseTask(task, requestPostTask.tags());
+    public ResponseTask postTask(RequestTask requestTask) {
+        Task task = taskRepo.create(Task.of(requestTask));
+        tagRepo.createTagMaps(requestTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
+        return new ResponseTask(task, requestTask.tags());
     }
 
     @Override
-    public ResponseTask putTask(int id, RequestPostTask requestPostTask) {
-        Task task = taskRepo.update(id, Task.of(requestPostTask));
+    public ResponseTask putTask(int id, RequestTask requestTask) {
+        Task task = taskRepo.update(id, Task.of(requestTask));
 
-        List<Integer> newTags = requestPostTask.tags();
+        List<Integer> newTags = requestTask.tags();
         List<Integer> registeredTags = tagRepo.getTagMaps(id);
 
         tagRepo.createTagMaps(
@@ -54,7 +59,7 @@ public class TaskService implements ITaskService {
         tagRepo.deleteTagMaps(
                 registeredTags.stream().filter(tagId -> !newTags.contains(tagId)).map(tagId -> new TagMap(task.id(), tagId)).toList());
 
-        return new ResponseTask(task, requestPostTask.tags());
+        return new ResponseTask(task, requestTask.tags());
     }
 
     @Override

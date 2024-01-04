@@ -1,7 +1,7 @@
 package tech.asari.todo.controller;
 
 import org.springframework.web.bind.annotation.*;
-import tech.asari.todo.controller.domain.RequestPostTask;
+import tech.asari.todo.controller.domain.RequestTask;
 import tech.asari.todo.controller.domain.ResponseTask;
 import tech.asari.todo.service.ITaskService;
 
@@ -26,8 +26,8 @@ public class TaskController {
     }
 
     @PostMapping("")
-    ResponseTask postTask(@RequestBody RequestPostTask requestPostTask) {
-        return taskService.postTask(requestPostTask);
+    ResponseTask postTask(@RequestBody RequestTask requestTask) {
+        return taskService.postTask(requestTask);
     }
 
     @GetMapping("/{id}")
@@ -36,8 +36,8 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    ResponseTask putTask(@PathVariable int id, @RequestBody RequestPostTask requestPostTask) {
-        return taskService.putTask(id, requestPostTask);
+    ResponseTask putTask(@PathVariable int id, @RequestBody RequestTask requestTask) {
+        return taskService.putTask(id, requestTask);
     }
 
     @DeleteMapping("/{id}")

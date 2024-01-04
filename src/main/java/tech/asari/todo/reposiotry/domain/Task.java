@@ -1,6 +1,6 @@
 package tech.asari.todo.reposiotry.domain;
 
-import tech.asari.todo.controller.domain.RequestPostTask;
+import tech.asari.todo.controller.domain.RequestTask;
 
 import java.sql.Timestamp;
 
@@ -18,18 +18,18 @@ public record Task(
         Timestamp deletedAt
 ) {
 
-    public static Task of(RequestPostTask requestPostTask) {
+    public static Task of(RequestTask requestTask) {
         return new Task(
                 0,
-                requestPostTask.groupId(),
-                requestPostTask.title(),
-                requestPostTask.description(),
+                requestTask.groupId(),
+                requestTask.title(),
+                requestTask.description(),
                 false,
                 false,
-                requestPostTask.order(),
-                requestPostTask.dueDate(),
+                requestTask.order(),
+                requestTask.dueDate(),
                 null,
-                new Timestamp(System.currentTimeMillis()),
+                null,
                 null
         );
     }

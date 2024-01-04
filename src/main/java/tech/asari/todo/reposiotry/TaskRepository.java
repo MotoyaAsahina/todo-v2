@@ -6,8 +6,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import tech.asari.todo.reposiotry.domain.Task;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TaskRepository implements ITaskRepository {
@@ -36,11 +38,11 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public Task get(int id) {
+    public Optional<Task> get(int id) {
         return client.sql("SELECT * FROM tasks WHERE id = :id")
                 .param("id", id)
                 .query(Task.class)
-                .single();
+                .optional();
     }
 
     @Override
@@ -99,7 +101,7 @@ public class TaskRepository implements ITaskRepository {
                 .param("due_date", task.dueDate())
                 .update();
 
-        return get(id);
+        return get(id).orElseThrow(() -> new RuntimeException("Failed to update task"));
     }
 
     @Override
@@ -114,7 +116,7 @@ public class TaskRepository implements ITaskRepository {
                 .param("description", task.description())
                 .param("order", task.order())
                 .param("due_date", task.dueDate())
-                .param("created_at", task.createdAt())
+                .param("created_at", new Timestamp(System.currentTimeMillis()))
                 .update(keyHolder, "id");
 
         if (keyHolder.getKey() == null)

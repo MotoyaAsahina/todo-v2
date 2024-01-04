@@ -1,6 +1,6 @@
 package tech.asari.todo.service;
 
-import tech.asari.todo.controller.domain.RequestPostTask;
+import tech.asari.todo.controller.domain.RequestTask;
 import tech.asari.todo.controller.domain.ResponseTask;
 
 import java.util.List;
@@ -11,9 +11,9 @@ public interface ITaskService {
 
     ResponseTask getTask(int id);
 
-    ResponseTask postTask(RequestPostTask requestPostTask);
+    ResponseTask postTask(RequestTask requestTask);
 
-    ResponseTask putTask(int id, RequestPostTask requestPostTask);
+    ResponseTask putTask(int id, RequestTask requestTask);
 
     void deleteTask(int id);
 

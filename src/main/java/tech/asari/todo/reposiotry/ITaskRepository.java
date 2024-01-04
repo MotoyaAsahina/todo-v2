@@ -3,11 +3,12 @@ package tech.asari.todo.reposiotry;
 import tech.asari.todo.reposiotry.domain.Task;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ITaskRepository {
     List<Task> getAll(String status, boolean deleted);
 
-    Task get(int id);
+    Optional<Task> get(int id);
 
     void setPending(int id, boolean pending);
 
