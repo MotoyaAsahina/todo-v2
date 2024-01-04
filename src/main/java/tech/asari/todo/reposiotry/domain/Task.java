@@ -18,8 +18,8 @@ public record Task(
         Timestamp deletedAt
 ) {
 
-    public Task(RequestPostTask requestPostTask) {
-        this(
+    public static Task of(RequestPostTask requestPostTask) {
+        return new Task(
                 0,
                 requestPostTask.groupId(),
                 requestPostTask.title(),
@@ -34,8 +34,8 @@ public record Task(
         );
     }
 
-    public Task(int id, Task task) {
-        this(
+    public static Task of(int id, Task task) {
+        return new Task(
                 id,
                 task.groupId(),
                 task.title(),

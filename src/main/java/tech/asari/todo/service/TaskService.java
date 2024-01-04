@@ -37,14 +37,14 @@ public class TaskService implements ITaskService {
 
     @Override
     public ResponseTask postTask(RequestPostTask requestPostTask) {
-        Task task = taskRepo.create(new Task(requestPostTask));
+        Task task = taskRepo.create(Task.of(requestPostTask));
         tagRepo.createTagMaps(requestPostTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
         return new ResponseTask(task, requestPostTask.tags());
     }
 
     @Override
     public ResponseTask putTask(int id, RequestPostTask requestPostTask) {
-        Task task = taskRepo.update(id, new Task(requestPostTask));
+        Task task = taskRepo.update(id, Task.of(requestPostTask));
         // TODO: タグマップが存在したときにインサートしてエラーにならないか確かめる
         tagRepo.createTagMaps(requestPostTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
         return new ResponseTask(task, requestPostTask.tags());

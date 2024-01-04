@@ -120,6 +120,6 @@ public class TaskRepository implements ITaskRepository {
         if (keyHolder.getKey() == null)
             throw new RuntimeException("Failed to create task");
 
-        return new Task(keyHolder.getKey().intValue(), task);
+        return Task.of(keyHolder.getKey().intValue(), task);
     }
 }
