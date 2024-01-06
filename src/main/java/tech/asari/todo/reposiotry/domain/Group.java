@@ -31,7 +31,7 @@ public record Group(
         );
     }
 
-    public static Group of(RequestGroup requestGroup, int order) {
+    public static Group of(RequestGroup requestGroup, int order, Timestamp createdAt) {
         return new Group(
                 0,
                 requestGroup.name(),
@@ -39,7 +39,7 @@ public record Group(
                 requestGroup.hasDueDate(),
                 requestGroup.classifiedBy(),
                 order,
-                null,
+                createdAt,
                 null,
                 null
         );

@@ -9,6 +9,7 @@ import tech.asari.todo.controller.domain.ResponseGroup;
 import tech.asari.todo.reposiotry.IGroupRepository;
 import tech.asari.todo.reposiotry.domain.Group;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -45,7 +46,7 @@ public class GroupService implements IGroupService {
             newOrder = requestGroup.order();
             groupRepo.moveDownAfter(newOrder);
         }
-        Group group = groupRepo.create(Group.of(requestGroup, newOrder));
+        Group group = groupRepo.create(Group.of(requestGroup, newOrder, new Timestamp(System.currentTimeMillis())));
         return new ResponseGroup(group);
     }
 

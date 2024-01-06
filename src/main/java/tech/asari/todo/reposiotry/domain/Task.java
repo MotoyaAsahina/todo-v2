@@ -18,6 +18,22 @@ public record Task(
         Timestamp deletedAt
 ) {
 
+    public static Task of(RequestTask requestTask, Timestamp createdAt) {
+        return new Task(
+                0,
+                requestTask.groupId(),
+                requestTask.title(),
+                requestTask.description(),
+                false,
+                false,
+                requestTask.order(),
+                requestTask.dueDate(),
+                null,
+                createdAt,
+                null
+        );
+    }
+
     public static Task of(RequestTask requestTask) {
         return new Task(
                 0,

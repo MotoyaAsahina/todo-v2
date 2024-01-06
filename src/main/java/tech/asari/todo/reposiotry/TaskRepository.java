@@ -116,7 +116,7 @@ public class TaskRepository implements ITaskRepository {
                 .param("description", task.description())
                 .param("order", task.order())
                 .param("due_date", task.dueDate())
-                .param("created_at", new Timestamp(System.currentTimeMillis()))
+                .param("created_at", task.createdAt())
                 .update(keyHolder, "id");
 
         if (keyHolder.getKey() == null)

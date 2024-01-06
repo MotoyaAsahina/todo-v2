@@ -10,12 +10,14 @@ import tech.asari.todo.reposiotry.ITaskRepository;
 import tech.asari.todo.reposiotry.domain.TagMap;
 import tech.asari.todo.reposiotry.domain.Task;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {
+
     private final ITaskRepository taskRepo;
     private final ITagRepository tagRepo;
 
@@ -42,7 +44,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public ResponseTask postTask(RequestTask requestTask) {
-        Task task = taskRepo.create(Task.of(requestTask));
+        Task task = taskRepo.create(Task.of(requestTask, new Timestamp(System.currentTimeMillis())));
         tagRepo.createTagMaps(requestTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
         return new ResponseTask(task, requestTask.tags());
     }

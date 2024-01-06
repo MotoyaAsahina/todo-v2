@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ITaskRepository {
+
     List<Task> getAll(String status, boolean deleted);
 
     Optional<Task> get(int id);

@@ -1,11 +1,16 @@
 package tech.asari.todo.reposiotry;
 
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import tech.asari.todo.reposiotry.domain.Tag;
 import tech.asari.todo.reposiotry.domain.TagMap;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -15,6 +20,91 @@ public class TagRepository implements ITagRepository {
 
     public TagRepository(JdbcClient client) {
         this.client = client;
+    }
+
+    @Override
+    public List<Tag> getAllTags(boolean archived) {
+        String sql = "SELECT * FROM tags WHERE deleted_at IS NULL" +
+                (archived ? " AND archived_at IS NOT NULL" : " AND archived_at IS NULL");
+
+        return client.sql(sql)
+                .query(Tag.class)
+                .list();
+    }
+
+    @Override
+    public Optional<Tag> getTag(int id) {
+        return client.sql("SELECT * FROM tags WHERE id = :id")
+                .param("id", id)
+                .query(Tag.class)
+                .optional();
+    }
+
+    @Override
+    public List<Tag> getAllDeletedTags() {
+        return client.sql("SELECT * FROM tags WHERE deleted_at IS NOT NULL")
+                .query(Tag.class)
+                .list();
+    }
+
+    @Override
+    public Tag createTag(Tag tag) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        client.sql("""
+                        INSERT INTO tags (name, classification, main_color, border_color, created_at)
+                        VALUES (:name, :classification, :main_color, :border_color, :created_at)
+                        """)
+                .param("name", tag.name())
+                .param("classification", tag.classification())
+                .param("main_color", tag.mainColor())
+                .param("border_color", tag.borderColor())
+                .param("created_at", tag.createdAt())
+                .update(keyHolder, "id");
+
+        if (keyHolder.getKey() == null)
+            throw new RuntimeException("Failed to create tag");
+
+        return Tag.of(keyHolder.getKey().intValue(), tag);
+    }
+
+    @Override
+    public Tag updateTag(int id, Tag tag) {
+        client.sql("""
+                        UPDATE tags
+                        SET name = :name, classification = :classification, main_color = :main_color, border_color = :border_color
+                        WHERE id = :id
+                        """)
+                .param("id", id)
+                .param("name", tag.name())
+                .param("classification", tag.classification())
+                .param("main_color", tag.mainColor())
+                .param("border_color", tag.borderColor())
+                .update();
+
+        return getTag(id).orElseThrow(() -> new RuntimeException("Failed to update tag"));
+    }
+
+    @Override
+    public void deleteTag(int id) {
+        client.sql("UPDATE tags SET deleted_at = :deleted_at WHERE id = :id")
+                .param("id", id)
+                .param("deleted_at", new Timestamp(System.currentTimeMillis()))
+                .update();
+    }
+
+    @Override
+    public void restoreTag(int id) {
+        client.sql("UPDATE tags SET deleted_at = NULL WHERE id = :id")
+                .param("id", id)
+                .update();
+    }
+
+    @Override
+    public void setArchivedTag(int id, boolean archived) {
+        client.sql("UPDATE tags SET archived_at = :archived_at WHERE id = :id")
+                .param("id", id)
+                .param("archived_at", archived ? new Timestamp(System.currentTimeMillis()) : null)
+                .update();
     }
 
     @Override

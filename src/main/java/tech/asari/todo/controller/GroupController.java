@@ -26,14 +26,14 @@ public class GroupController {
         return groupService.getGroups(archived, deleted);
     }
 
-    @PostMapping("")
-    ResponseGroup postGroup(@RequestBody RequestGroup requestGroup) {
-        return groupService.postGroup(requestGroup);
-    }
-
     @GetMapping("/{id}")
     ResponseGroup getGroup(@PathVariable int id) {
         return groupService.getGroup(id);
+    }
+
+    @PostMapping("")
+    ResponseGroup postGroup(@RequestBody RequestGroup requestGroup) {
+        return groupService.postGroup(requestGroup);
     }
 
     @PutMapping("/{id}")

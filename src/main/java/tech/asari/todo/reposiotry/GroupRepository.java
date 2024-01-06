@@ -56,11 +56,11 @@ public class GroupRepository implements IGroupRepository {
                 .param("hasDueDate", group.hasDueDate().toString())
                 .param("classifiedBy", group.classifiedBy())
                 .param("order", group.order())
-                .param("createdAt", new Timestamp(System.currentTimeMillis()))
+                .param("createdAt", group.createdAt())
                 .update(keyHolder, "id");
 
         if (keyHolder.getKey() == null)
-            throw new RuntimeException("Failed to create task");
+            throw new RuntimeException("Failed to create group");
 
         return Group.of(keyHolder.getKey().intValue(), group);
     }
