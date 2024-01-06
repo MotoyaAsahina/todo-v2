@@ -2,7 +2,6 @@ package tech.asari.todo.reposiotry.domain;
 
 import tech.asari.todo.controller.domain.RequestGroup;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
 public record Group(

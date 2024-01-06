@@ -8,7 +8,7 @@ import tech.asari.todo.service.ITagService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tag")
+@RequestMapping("/api/tags")
 public class TagController {
 
     private final ITagService tagService;

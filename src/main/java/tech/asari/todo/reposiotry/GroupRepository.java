@@ -49,14 +49,14 @@ public class GroupRepository implements IGroupRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         client.sql("""
                         INSERT INTO `groups` (name, description, has_due_date, classified_by, `order`, created_at)
-                        VALUES (:name, :description, :hasDueDate, :classifiedBy, :order, :createdAt)
+                        VALUES (:name, :description, :has_due_date, :classified_by, :order, :created_at)
                         """)
                 .param("name", group.name())
                 .param("description", group.description())
-                .param("hasDueDate", group.hasDueDate().toString())
-                .param("classifiedBy", group.classifiedBy())
+                .param("has_due_date", group.hasDueDate().toString())
+                .param("classified_by", group.classifiedBy())
                 .param("order", group.order())
-                .param("createdAt", group.createdAt())
+                .param("created_at", group.createdAt())
                 .update(keyHolder, "id");
 
         if (keyHolder.getKey() == null)
@@ -69,15 +69,15 @@ public class GroupRepository implements IGroupRepository {
     public Group update(int id, Group group) {
         client.sql("""
                         UPDATE `groups`
-                        SET name = :name, description = :description, has_due_date = :hasDueDate,
-                            classified_by = :classifiedBy, `order` = :order
+                        SET name = :name, description = :description, has_due_date = :has_due_date,
+                            classified_by = :classified_by, `order` = :order
                         WHERE id = :id
                         """)
                 .param("id", id)
                 .param("name", group.name())
                 .param("description", group.description())
-                .param("hasDueDate", group.hasDueDate().toString())
-                .param("classifiedBy", group.classifiedBy())
+                .param("has_due_date", group.hasDueDate().toString())
+                .param("classified_by", group.classifiedBy())
                 .param("order", group.order())
                 .update();
 
