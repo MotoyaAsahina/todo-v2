@@ -1,0 +1,32 @@
+server:
+  port: 8010
+  error:
+    include-stacktrace: never
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: OVERRIDEN_BY_SPRING_DATASOURCE_URL
+    username: OVERRIDEN_BY_SPRING_DATASOURCE_USERNAME
+    password: OVERRIDEN_BY_SPRING_DATASOURCE_PASSWORD
+  jackson:
+    time-zone: Asia/Tokyo
+    date-format: yyyy-MM-dd HH:mm:ssZ
+    property-naming-strategy: SNAKE_CASE
+    serialization:
+      order-map-entries-by-keys: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            provider: google
+            client-id: OVERRIDEN_BY_SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID
+            client-secret: OVERRIDEN_BY_SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: OVERRIDE_BY_SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_REDIRECT_URI
+            scope: email,profile
+
+user:
+  google:
+    allowed-emails: OVERRIDE_BY_USER_GOOGLE_ALLOWED_EMAILS
