@@ -11,7 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class AuthMiddleware implements HandlerInterceptor {
 
-    @Value("${user.google.arrowed-emails}")
+    @Value("${user.google.allowed-emails}")
     private String[] ALLOWED_EMAILS;
 
     @Override
