@@ -1,0 +1,19 @@
+services:
+  app:
+    image: openjdk:24-slim-bullseye
+    restart: always
+    networks:
+      - mariadb
+    ports:
+      - "127.0.0.1:8031:8031"
+    volumes:
+      - ./app.jar:/app.jar
+    env_file: .env
+    environment:
+      - SERVER_PORT=8031
+    command: java -jar app.jar
+
+networks:
+  mariadb:
+    external: true
+    name: mariadb_default
