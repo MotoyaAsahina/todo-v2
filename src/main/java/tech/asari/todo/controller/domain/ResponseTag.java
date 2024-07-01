@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 public record ResponseTag(
         int id,
         String name,
+        @Schema(nullable = true)
         String classification,
         String mainColor,
         @Schema(nullable = true)
