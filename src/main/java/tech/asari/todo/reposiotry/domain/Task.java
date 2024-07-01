@@ -18,7 +18,7 @@ public record Task(
         Timestamp deletedAt
 ) {
 
-    public static Task of(RequestTask requestTask, Timestamp createdAt) {
+    public static Task of(RequestTask requestTask, Timestamp dueDate, Timestamp createdAt) {
         return new Task(
                 0,
                 requestTask.groupId(),
@@ -27,14 +27,14 @@ public record Task(
                 false,
                 false,
                 requestTask.order(),
-                requestTask.dueDate(),
+                dueDate,
                 null,
                 createdAt,
                 null
         );
     }
 
-    public static Task of(RequestTask requestTask) {
+    public static Task of(RequestTask requestTask, Timestamp dueDate) {
         return new Task(
                 0,
                 requestTask.groupId(),
@@ -43,7 +43,7 @@ public record Task(
                 false,
                 false,
                 requestTask.order(),
-                requestTask.dueDate(),
+                dueDate,
                 null,
                 null,
                 null

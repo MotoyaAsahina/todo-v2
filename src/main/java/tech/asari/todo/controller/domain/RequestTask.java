@@ -2,7 +2,6 @@ package tech.asari.todo.controller.domain;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public record RequestTask(
@@ -12,7 +11,7 @@ public record RequestTask(
         @Schema(nullable = true)
         Integer order,
         @Schema(nullable = true)
-        Timestamp dueDate,
+        String dueDate,
         List<Integer> tags
 ) {
 }

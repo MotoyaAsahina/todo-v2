@@ -9,11 +9,10 @@ import tech.asari.todo.reposiotry.ITagRepository;
 import tech.asari.todo.reposiotry.ITaskRepository;
 import tech.asari.todo.reposiotry.domain.TagMap;
 import tech.asari.todo.reposiotry.domain.Task;
+import tech.asari.todo.util.DueDateParser;
 
 import java.sql.Timestamp;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class TaskService implements ITaskService {
@@ -44,14 +43,21 @@ public class TaskService implements ITaskService {
 
     @Override
     public ResponseTask postTask(RequestTask requestTask) {
-        Task task = taskRepo.create(Task.of(requestTask, new Timestamp(System.currentTimeMillis())));
+        String originalDueDate = requestTask.dueDate();
+        Timestamp dueDate = DueDateParser.parseDueDate(originalDueDate);
+
+        Task task = taskRepo.create(Task.of(requestTask, dueDate, new Timestamp(System.currentTimeMillis())));
+
         tagRepo.createTagMaps(requestTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
         return new ResponseTask(task, requestTask.tags());
     }
 
     @Override
     public ResponseTask putTask(int id, RequestTask requestTask) {
-        Task task = taskRepo.update(id, Task.of(requestTask));
+        String originalDueDate = requestTask.dueDate();
+        Timestamp dueDate = DueDateParser.parseDueDate(originalDueDate);
+
+        Task task = taskRepo.update(id, Task.of(requestTask, dueDate));
 
         List<Integer> newTags = requestTask.tags();
         List<Integer> registeredTags = tagRepo.getTagMaps(id);
