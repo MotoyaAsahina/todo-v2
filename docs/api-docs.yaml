@@ -1,0 +1,657 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8010
+  description: Generated server url
+paths:
+  /api/tasks/{id}:
+    get:
+      tags:
+      - task-api
+      operationId: getTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    put:
+      tags:
+      - task-api
+      operationId: putTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTask'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    delete:
+      tags:
+      - task-api
+      operationId: deleteTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/unpinned:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskUnpinned
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/unpending:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskUnpending
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/undone:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskUndone
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/restore:
+    put:
+      tags:
+      - task-api
+      operationId: restoreTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/pinned:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskPinned
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/pending:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskPending
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks/{id}/done:
+    put:
+      tags:
+      - task-api
+      operationId: putTaskDone
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tags/{id}:
+    get:
+      tags:
+      - tag-api
+      operationId: getTag
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+    put:
+      tags:
+      - tag-api
+      operationId: putTag
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTag'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+    delete:
+      tags:
+      - tag-api
+      operationId: deleteTag
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tags/{id}/unarchived:
+    put:
+      tags:
+      - tag-api
+      operationId: putTagUnarchived
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tags/{id}/restore:
+    put:
+      tags:
+      - tag-api
+      operationId: restoreTag
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tags/{id}/archived:
+    put:
+      tags:
+      - tag-api
+      operationId: putTagArchived
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/groups/{id}:
+    get:
+      tags:
+      - group-api
+      operationId: getGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      tags:
+      - group-api
+      operationId: putGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestGroup'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    delete:
+      tags:
+      - group-api
+      operationId: deleteGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/groups/{id}/unarchived:
+    put:
+      tags:
+      - group-api
+      operationId: putGroupUnarchived
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/groups/{id}/restore:
+    put:
+      tags:
+      - group-api
+      operationId: restoreGroup
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/groups/{id}/archived:
+    put:
+      tags:
+      - group-api
+      operationId: putGroupArchived
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+  /api/tasks:
+    get:
+      tags:
+      - task-api
+      operationId: getTasks
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: undone
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      tags:
+      - task-api
+      operationId: postTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTask'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+  /api/tags:
+    get:
+      tags:
+      - tag-api
+      operationId: getTags
+      parameters:
+      - name: archived
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+    post:
+      tags:
+      - tag-api
+      operationId: postTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestTag'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+  /api/groups:
+    get:
+      tags:
+      - group-api
+      operationId: getGroups
+      parameters:
+      - name: archived
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+    post:
+      tags:
+      - group-api
+      operationId: postGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestGroup'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+components:
+  schemas:
+    RequestTask:
+      type: object
+      properties:
+        groupId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        description:
+          type: string
+        order:
+          type: integer
+          format: int32
+        dueDate:
+          type: string
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: integer
+            format: int32
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        groupId:
+          type: integer
+          format: int32
+        title:
+          type: string
+        description:
+          type: string
+        pending:
+          type: boolean
+        pinned:
+          type: boolean
+        order:
+          type: integer
+          format: int32
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+        doneAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: integer
+            format: int32
+    RequestTag:
+      type: object
+      properties:
+        name:
+          type: string
+        classification:
+          type: string
+        mainColor:
+          type: string
+        borderColor:
+          type: string
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        classification:
+          type: string
+        mainColor:
+          type: string
+        borderColor:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true
+    RequestGroup:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        hasDueDate:
+          type: string
+          enum:
+          - ALWAYS
+          - OPTIONAL
+          - "NO"
+        classifiedBy:
+          type: string
+        order:
+          type: integer
+          format: int32
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        hasDueDate:
+          type: string
+          enum:
+          - ALWAYS
+          - OPTIONAL
+          - "NO"
+        classifiedBy:
+          type: string
+        order:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        archivedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deletedAt:
+          type: string
+          format: date-time
+          nullable: true

@@ -1,5 +1,6 @@
 package tech.asari.todo.controller.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import tech.asari.todo.reposiotry.domain.Tag;
 
 import java.sql.Timestamp;
@@ -9,9 +10,12 @@ public record ResponseTag(
         String name,
         String classification,
         String mainColor,
+        @Schema(nullable = true)
         String borderColor,
         Timestamp createdAt,
+        @Schema(nullable = true)
         Timestamp archivedAt,
+        @Schema(nullable = true)
         Timestamp deletedAt
 ) {
 

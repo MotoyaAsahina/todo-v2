@@ -11,6 +11,7 @@ services:
     env_file: .env
     environment:
       - SERVER_PORT=8031
+      - TZ=Asia/Tokyo
     command: java -jar app.jar
 
 networks:

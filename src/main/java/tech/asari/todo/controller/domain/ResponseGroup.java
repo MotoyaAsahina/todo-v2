@@ -1,5 +1,6 @@
 package tech.asari.todo.controller.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import tech.asari.todo.reposiotry.domain.Group;
 import tech.asari.todo.reposiotry.domain.HasDueDate;
 
@@ -13,10 +14,11 @@ public record ResponseGroup(
         String classifiedBy,
         int order,
         Timestamp createdAt,
+        @Schema(nullable = true)
         Timestamp archivedAt,
+        @Schema(nullable = true)
         Timestamp deletedAt
 ) {
-
     public ResponseGroup(Group group) {
         this(
                 group.id(),

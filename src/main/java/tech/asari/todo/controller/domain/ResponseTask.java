@@ -1,5 +1,6 @@
 package tech.asari.todo.controller.domain;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
@@ -12,10 +13,14 @@ public record ResponseTask(
         String description,
         boolean pending,
         boolean pinned,
+        @Schema(nullable = true)
         Integer order,
+        @Schema(nullable = true)
         Timestamp dueDate,
+        @Schema(nullable = true)
         Timestamp doneAt,
         Timestamp createdAt,
+        @Schema(nullable = true)
         Timestamp deletedAt,
         List<Integer> tags
 ) {

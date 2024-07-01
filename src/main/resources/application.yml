@@ -27,6 +27,10 @@ spring:
             redirect-uri: OVERRIDE_BY_SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_REDIRECT_URI
             scope: email,profile
 
+springdoc:
+  swagger-ui:
+    enabled: false
+
 user:
   google:
     allowed-emails: OVERRIDE_BY_USER_GOOGLE_ALLOWED_EMAILS__TYPE_STRING_LIST
