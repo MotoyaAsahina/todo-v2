@@ -2,6 +2,9 @@ server:
   port: 8010
   error:
     include-stacktrace: never
+  servlet:
+    session:
+      timeout: 43200m
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,7 +14,6 @@ spring:
   jackson:
     time-zone: Asia/Tokyo
     date-format: yyyy-MM-dd HH:mm:ssZ
-    property-naming-strategy: SNAKE_CASE
     serialization:
       order-map-entries-by-keys: true
   security:

@@ -519,9 +519,11 @@ components:
         order:
           type: integer
           format: int32
+          nullable: true
         dueDate:
           type: string
           format: date-time
+          nullable: true
         tags:
           type: array
           items:
@@ -575,10 +577,12 @@ components:
           type: string
         classification:
           type: string
+          nullable: true
         mainColor:
           type: string
         borderColor:
           type: string
+          nullable: true
     Tag:
       type: object
       properties:
@@ -589,6 +593,7 @@ components:
           type: string
         classification:
           type: string
+          nullable: true
         mainColor:
           type: string
         borderColor:
@@ -620,9 +625,11 @@ components:
           - "NO"
         classifiedBy:
           type: string
+          nullable: true
         order:
           type: integer
           format: int32
+          nullable: true
     Group:
       type: object
       properties:
