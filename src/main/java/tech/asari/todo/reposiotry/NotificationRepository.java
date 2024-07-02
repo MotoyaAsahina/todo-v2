@@ -3,6 +3,7 @@ package tech.asari.todo.reposiotry;
 import org.springframework.stereotype.Repository;
 import tech.asari.todo.reposiotry.domain.Notification;
 import tech.asari.todo.reposiotry.domain.NotificationTime;
+import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -21,6 +22,11 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
+    public List<Task> getTasksByNotificationTime(Timestamp time) {
+        return List.of();
+    }
+
+    @Override
     public void deleteNotifications(int taskId) {
 
     }
@@ -32,7 +38,7 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
-    public void setNotificationTimeNoticed(Timestamp time) {
+    public void setNotificationTimeNoticed(Timestamp time, int taskCount) {
 
     }
 }

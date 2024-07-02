@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import tech.asari.todo.reposiotry.INotificationRepository;
 import tech.asari.todo.reposiotry.domain.Notification;
 import tech.asari.todo.reposiotry.domain.NotificationTime;
+import tech.asari.todo.reposiotry.domain.Task;
 import tech.asari.todo.util.NotificationTagParser;
 
 import java.sql.Timestamp;
@@ -49,18 +50,22 @@ public class NotificationService implements INotificationService {
         // Schedule notification
         Thread thread = new Thread(() -> {
             try {
+                // NOTE: NotificationRepository と schedule メソッドの実装から、sleepTime > 0 は保証されている
                 long sleepTime = time.getTime() - System.currentTimeMillis();
-                if (sleepTime > 0) { // NOTE: Repository の実装から、sleepTime > 0 は保証されている
-                    TimeUnit.MILLISECONDS.sleep(sleepTime);
+                TimeUnit.MILLISECONDS.sleep(sleepTime);
 
-                    // TODO: Post notification
-
-                    notificationRepo.setNotificationTimeNoticed(time);
-                }
+                // Notify
+                notify(time);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
         thread.start();
+    }
+
+    private void notify(Timestamp notificationTime) {
+        List<Task> tasks = notificationRepo.getTasksByNotificationTime(notificationTime);
+
+        notificationRepo.setNotificationTimeNoticed(notificationTime, tasks.size());
     }
 }
