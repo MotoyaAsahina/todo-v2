@@ -6,6 +6,8 @@ import tech.asari.todo.reposiotry.domain.Task;
 import java.sql.Timestamp;
 import java.util.List;
 
+// TODO: Add List<String> notificationTags
+
 public record ResponseTask(
         int id,
         int groupId,

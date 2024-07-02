@@ -12,6 +12,7 @@ public record RequestTask(
         Integer order,
         @Schema(nullable = true)
         String dueDate,
-        List<Integer> tags
+        List<Integer> tags,
+        List<String> notificationTags
 ) {
 }

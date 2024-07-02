@@ -2,6 +2,7 @@ package tech.asari.todo.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import tech.asari.todo.controller.domain.RequestTask;
 import tech.asari.todo.controller.domain.ResponseTask;
@@ -12,15 +13,19 @@ import tech.asari.todo.reposiotry.domain.Task;
 import tech.asari.todo.util.DueDateParser;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService {
 
+    private final INotificationService notificationService;
     private final ITaskRepository taskRepo;
     private final ITagRepository tagRepo;
 
-    public TaskService(ITaskRepository taskRepo, ITagRepository tagRepo) {
+    public TaskService(INotificationService notificationService, ITaskRepository taskRepo, ITagRepository tagRepo) {
+        this.notificationService = notificationService;
         this.taskRepo = taskRepo;
         this.tagRepo = tagRepo;
     }
@@ -42,6 +47,7 @@ public class TaskService implements ITaskService {
     }
 
     @Override
+    @Transactional
     public ResponseTask postTask(RequestTask requestTask) {
         String originalDueDate = requestTask.dueDate();
         Timestamp dueDate = DueDateParser.parseDueDate(originalDueDate);
@@ -49,10 +55,14 @@ public class TaskService implements ITaskService {
         Task task = taskRepo.create(Task.of(requestTask, dueDate, new Timestamp(System.currentTimeMillis())));
 
         tagRepo.createTagMaps(requestTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
+
+        notificationService.schedule(task.id(), requestTask.notificationTags(), dueDate);
+
         return new ResponseTask(task, requestTask.tags());
     }
 
     @Override
+    @Transactional
     public ResponseTask putTask(int id, RequestTask requestTask) {
         String originalDueDate = requestTask.dueDate();
         Timestamp dueDate = DueDateParser.parseDueDate(originalDueDate);
@@ -66,6 +76,8 @@ public class TaskService implements ITaskService {
                 newTags.stream().filter(tagId -> !registeredTags.contains(tagId)).map(tagId -> new TagMap(task.id(), tagId)).toList());
         tagRepo.deleteTagMaps(
                 registeredTags.stream().filter(tagId -> !newTags.contains(tagId)).map(tagId -> new TagMap(task.id(), tagId)).toList());
+
+        notificationService.schedule(task.id(), requestTask.notificationTags(), dueDate);
 
         return new ResponseTask(task, requestTask.tags());
     }
