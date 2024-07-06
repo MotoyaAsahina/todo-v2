@@ -9,6 +9,8 @@ import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 public class NotificationRepository implements INotificationRepository {
@@ -50,6 +52,33 @@ public class NotificationRepository implements INotificationRepository {
                 .param("time", time)
                 .query(Task.class)
                 .list();
+    }
+
+    @Override
+    public List<String> getNotificationTags(int taskId) {
+        return client.sql("SELECT tag FROM notifications WHERE task_id = :task_id")
+                .param("task_id", taskId)
+                .query(String.class)
+                .list();
+    }
+
+    @Override
+    public Map<Integer, List<String>> getAllNotificationTags(String status, boolean deleted) {
+        String condition = deleted ? "WHERE deleted_at IS NOT NULL" : "WHERE deleted_at IS NULL";
+        switch (status) {
+            case "done" -> condition += " AND done_at IS NOT NULL";
+            case "undone" -> condition += " AND done_at IS NULL";
+            case "all" -> condition += "";
+            default -> throw new IllegalArgumentException("status must be one of 'done', 'undone', 'all'");
+        }
+        return client.sql("""
+                        SELECT * FROM notifications
+                        WHERE task_id IN (SELECT id FROM tasks %s)
+                        """.formatted(condition))
+                .query(Notification.class)
+                .list()
+                .stream()
+                .collect(Collectors.groupingBy(Notification::taskId, Collectors.mapping(Notification::tag, Collectors.toList())));
     }
 
     @Override

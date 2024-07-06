@@ -6,8 +6,6 @@ import tech.asari.todo.reposiotry.domain.Task;
 import java.sql.Timestamp;
 import java.util.List;
 
-// TODO: Add List<String> notificationTags
-
 public record ResponseTask(
         int id,
         int groupId,
@@ -24,9 +22,10 @@ public record ResponseTask(
         Timestamp createdAt,
         @Schema(nullable = true)
         Timestamp deletedAt,
-        List<Integer> tags
+        List<Integer> tags,
+        List<String> notificationTags
 ) {
-    public ResponseTask(Task task, List<Integer> tags) {
+    public ResponseTask(Task task, List<Integer> tags, List<String> notificationTags) {
         this(
                 task.id(),
                 task.groupId(),
@@ -39,7 +38,8 @@ public record ResponseTask(
                 task.doneAt(),
                 task.createdAt(),
                 task.deletedAt(),
-                tags == null ? List.of() : tags
+                tags == null ? List.of() : tags,
+                notificationTags == null ? List.of() : notificationTags
         );
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import tech.asari.todo.controller.domain.RequestTask;
 import tech.asari.todo.controller.domain.ResponseTask;
+import tech.asari.todo.reposiotry.INotificationRepository;
 import tech.asari.todo.reposiotry.ITagRepository;
 import tech.asari.todo.reposiotry.ITaskRepository;
 import tech.asari.todo.reposiotry.domain.TagMap;
@@ -23,18 +24,27 @@ public class TaskService implements ITaskService {
     private final INotificationService notificationService;
     private final ITaskRepository taskRepo;
     private final ITagRepository tagRepo;
+    private final INotificationRepository notificationRepository;
 
-    public TaskService(INotificationService notificationService, ITaskRepository taskRepo, ITagRepository tagRepo) {
+    public TaskService(
+            INotificationService notificationService,
+            ITaskRepository taskRepo,
+            ITagRepository tagRepo,
+            INotificationRepository notificationRepository
+    ) {
         this.notificationService = notificationService;
         this.taskRepo = taskRepo;
         this.tagRepo = tagRepo;
+        this.notificationRepository = notificationRepository;
     }
 
     @Override
     public List<ResponseTask> getTasks(String status, boolean deleted) {
         List<Task> tasks = taskRepo.getAll(status, deleted);
         Map<Integer, List<Integer>> tagMaps = tagRepo.getAllTagMaps(status, deleted);
-        return tasks.stream().map(task -> new ResponseTask(task, tagMaps.get(task.id()))).toList();
+        Map<Integer, List<String>> notificationTags = notificationRepository.getAllNotificationTags(status, deleted);
+
+        return tasks.stream().map(task -> new ResponseTask(task, tagMaps.get(task.id()), notificationTags.get(task.id()))).toList();
     }
 
     @Override
@@ -43,7 +53,9 @@ public class TaskService implements ITaskService {
         if (task.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         List<Integer> tagMaps = tagRepo.getTagMaps(id);
-        return new ResponseTask(task.get(), tagMaps);
+        List<String> notificationTags = notificationRepository.getNotificationTags(id);
+
+        return new ResponseTask(task.get(), tagMaps, notificationTags);
     }
 
     @Override
@@ -53,12 +65,11 @@ public class TaskService implements ITaskService {
         Timestamp dueDate = DueDateParser.parseDueDate(originalDueDate);
 
         Task task = taskRepo.create(Task.of(requestTask, dueDate, new Timestamp(System.currentTimeMillis())));
-
         tagRepo.createTagMaps(requestTask.tags().stream().map(tagId -> new TagMap(task.id(), tagId)).toList());
 
         notificationService.schedule(task.id(), requestTask.notificationTags(), dueDate);
 
-        return new ResponseTask(task, requestTask.tags());
+        return new ResponseTask(task, requestTask.tags(), requestTask.notificationTags());
     }
 
     @Override
@@ -79,7 +90,7 @@ public class TaskService implements ITaskService {
 
         notificationService.schedule(task.id(), requestTask.notificationTags(), dueDate);
 
-        return new ResponseTask(task, requestTask.tags());
+        return new ResponseTask(task, requestTask.tags(), requestTask.notificationTags());
     }
 
     @Override

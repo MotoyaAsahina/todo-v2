@@ -6,6 +6,7 @@ import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 public interface INotificationRepository {
 
@@ -14,6 +15,10 @@ public interface INotificationRepository {
     void createNotifications(List<Notification> notifications);
 
     List<Task> getTasksByNotificationTime(Timestamp time);
+
+    List<String> getNotificationTags(int taskId);
+
+    Map<Integer, List<String>> getAllNotificationTags(String status, boolean deleted);
 
     void deleteNotifications(int taskId);
 
