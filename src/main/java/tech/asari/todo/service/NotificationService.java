@@ -64,7 +64,7 @@ public class NotificationService implements INotificationService {
     }
 
     private void notify(Timestamp notificationTime) {
-        List<Task> tasks = notificationRepo.getTasksByNotificationTime(notificationTime);
+        List<Task> tasks = notificationRepo.getActiveTasksByNotificationTime(notificationTime);
 
         notificationRepo.setNotificationTimeNoticed(notificationTime, tasks.size());
     }

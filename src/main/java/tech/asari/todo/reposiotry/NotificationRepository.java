@@ -47,8 +47,8 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
-    public List<Task> getTasksByNotificationTime(Timestamp time) {
-        return client.sql("SELECT * FROM tasks WHERE id IN (SELECT task_id FROM notifications WHERE time = :time)")
+    public List<Task> getActiveTasksByNotificationTime(Timestamp time) {
+        return client.sql("SELECT * FROM tasks WHERE id IN (SELECT task_id FROM notifications WHERE time = :time) AND deleted_at IS NULL AND done_at IS NULL")
                 .param("time", time)
                 .query(Task.class)
                 .list();

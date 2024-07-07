@@ -14,7 +14,7 @@ public interface INotificationRepository {
 
     void createNotifications(List<Notification> notifications);
 
-    List<Task> getTasksByNotificationTime(Timestamp time);
+    List<Task> getActiveTasksByNotificationTime(Timestamp time);
 
     List<String> getNotificationTags(int taskId);
 
