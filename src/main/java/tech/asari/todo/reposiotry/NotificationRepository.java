@@ -55,6 +55,16 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
+    public Map<Integer, String> getNotificationTags(Timestamp time) {
+        return client.sql("SELECT * FROM notifications WHERE time = :time")
+                .param("time", time)
+                .query(Notification.class)
+                .list()
+                .stream()
+                .collect(Collectors.toMap(Notification::taskId, Notification::tag));
+    }
+
+    @Override
     public List<String> getNotificationTags(int taskId) {
         return client.sql("SELECT tag FROM notifications WHERE task_id = :task_id")
                 .param("task_id", taskId)

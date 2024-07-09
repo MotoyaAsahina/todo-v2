@@ -16,6 +16,8 @@ public interface INotificationRepository {
 
     List<Task> getActiveTasksByNotificationTime(Timestamp time);
 
+    Map<Integer, String> getNotificationTags(Timestamp time);
+
     List<String> getNotificationTags(int taskId);
 
     Map<Integer, List<String>> getAllNotificationTags(String status, boolean deleted);

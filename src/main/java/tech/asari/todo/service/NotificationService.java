@@ -2,22 +2,35 @@ package tech.asari.todo.service;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import tech.asari.todo.reposiotry.IGroupRepository;
 import tech.asari.todo.reposiotry.INotificationRepository;
-import tech.asari.todo.reposiotry.domain.Notification;
-import tech.asari.todo.reposiotry.domain.NotificationTime;
-import tech.asari.todo.reposiotry.domain.Task;
+import tech.asari.todo.reposiotry.ITagRepository;
+import tech.asari.todo.reposiotry.domain.*;
 import tech.asari.todo.util.NotificationTagParser;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class NotificationService implements INotificationService {
 
+    private final ITagRepository tagRepository;
+    private final IGroupRepository groupRepository;
     private final INotificationRepository notificationRepo;
 
-    public NotificationService(INotificationRepository notificationRepo) {
+    public NotificationService(
+            ITagRepository tagRepository,
+            IGroupRepository groupRepository,
+            INotificationRepository notificationRepo
+    ) {
+        this.tagRepository = tagRepository;
+        this.groupRepository = groupRepository;
         this.notificationRepo = notificationRepo;
     }
 
@@ -46,7 +59,7 @@ public class NotificationService implements INotificationService {
         notificationTimes.forEach(this::scheduleNotification);
     }
 
-    private void scheduleNotification(Timestamp time) {
+    public void scheduleNotification(Timestamp time) {
         // Schedule notification
         Thread thread = new Thread(() -> {
             try {
@@ -63,8 +76,32 @@ public class NotificationService implements INotificationService {
         thread.start();
     }
 
-    private void notify(Timestamp notificationTime) {
+    @Override
+    public void notify(Timestamp notificationTime) {
         List<Task> tasks = notificationRepo.getActiveTasksByNotificationTime(notificationTime);
+
+        Map<Integer, Group> groups =
+                groupRepository.getAll(false).stream().collect(Collectors.toMap(Group::id, Function.identity()));
+        Map<Integer, Tag> tags =
+                tagRepository.getAllTags(false).stream().collect(Collectors.toMap(Tag::id, Function.identity()));
+        Map<Integer, String> notificationTags = notificationRepo.getNotificationTags(notificationTime);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String message = "Tasks to do:\n" +
+                tasks.stream().map(task -> {
+                    List<Integer> tagIds = tagRepository.getTagMaps(task.id());
+                    return "%s (%s): %s (Remaining %s)".formatted(
+                            task.title(),
+                            groups.get(task.groupId()).name() + (tagIds.isEmpty() ? "" :
+                                    ", " + tagIds.stream().map(tags::get).map(Tag::name).collect(Collectors.joining(", "))),
+                            sdf.format(task.dueDate()),
+                            notificationTags.get(task.id())
+                    );
+                }).collect(Collectors.joining("\n"));
+
+        // TODO: Send notification
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.mmm").format(Calendar.getInstance().getTime()) + "\n" + message);
 
         notificationRepo.setNotificationTimeNoticed(notificationTime, tasks.size());
     }
