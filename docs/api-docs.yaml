@@ -573,6 +573,10 @@ components:
           items:
             type: integer
             format: int32
+        notificationTags:
+          type: array
+          items:
+            type: string
     RequestTag:
       type: object
       properties:
