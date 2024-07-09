@@ -1,7 +1,6 @@
 package tech.asari.todo.reposiotry;
 
 import tech.asari.todo.reposiotry.domain.Notification;
-import tech.asari.todo.reposiotry.domain.NotificationTime;
 import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
@@ -10,7 +9,7 @@ import java.util.Map;
 
 public interface INotificationRepository {
 
-    List<Timestamp> createNotificationTimesIfNotExists(List<NotificationTime> notificationTimes);
+    List<Timestamp> createNotificationTimesIfNotExists(List<Timestamp> notificationTimes);
 
     void createNotifications(List<Notification> notifications);
 

@@ -43,8 +43,7 @@ public class NotificationService implements INotificationService {
                 .toList();
 
         List<Timestamp> notificationTimes =
-                notificationRepo.createNotificationTimesIfNotExists(
-                        notifications.stream().map(notification -> NotificationTime.of(notification.time())).toList());
+                notificationRepo.createNotificationTimesIfNotExists(notifications.stream().map(Notification::time).toList());
 
         notificationRepo.deleteNotifications(taskId);
         notificationRepo.createNotifications(notifications);

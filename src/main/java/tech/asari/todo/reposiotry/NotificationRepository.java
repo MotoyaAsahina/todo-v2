@@ -4,7 +4,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import tech.asari.todo.reposiotry.domain.Notification;
-import tech.asari.todo.reposiotry.domain.NotificationTime;
 import tech.asari.todo.reposiotry.domain.Task;
 
 import java.sql.Timestamp;
@@ -22,17 +21,17 @@ public class NotificationRepository implements INotificationRepository {
     }
 
     @Override
-    public List<Timestamp> createNotificationTimesIfNotExists(List<NotificationTime> notificationTimes) {
+    public List<Timestamp> createNotificationTimesIfNotExists(List<Timestamp> notificationTimes) {
         return notificationTimes.stream().filter(notificationTime -> {
             try {
                 client.sql("INSERT INTO notification_times (time) VALUES (:time)")
-                        .param("time", notificationTime.time())
+                        .param("time", notificationTime)
                         .update();
             } catch (DuplicateKeyException e) {
                 return false;
             }
             return true;
-        }).map(NotificationTime::time).toList();
+        }).toList();
     }
 
     @Override
