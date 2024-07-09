@@ -33,7 +33,7 @@ public class NotificationTagParserTest {
 
     @Test
     void testParse() throws ParseException {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = DateFormat.DEFAULT();
 
         // TODO: 小数計算を行ったときにミリ秒まで合っているか確認
 

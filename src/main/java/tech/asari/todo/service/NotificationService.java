@@ -5,7 +5,11 @@ import org.springframework.stereotype.Service;
 import tech.asari.todo.reposiotry.IGroupRepository;
 import tech.asari.todo.reposiotry.INotificationRepository;
 import tech.asari.todo.reposiotry.ITagRepository;
-import tech.asari.todo.reposiotry.domain.*;
+import tech.asari.todo.reposiotry.domain.Group;
+import tech.asari.todo.reposiotry.domain.Notification;
+import tech.asari.todo.reposiotry.domain.Tag;
+import tech.asari.todo.reposiotry.domain.Task;
+import tech.asari.todo.util.DateFormat;
 import tech.asari.todo.util.NotificationTagParser;
 
 import java.sql.Timestamp;
@@ -85,8 +89,6 @@ public class NotificationService implements INotificationService {
                 tagRepository.getAllTags(false).stream().collect(Collectors.toMap(Tag::id, Function.identity()));
         Map<Integer, String> notificationTags = notificationRepo.getNotificationTags(notificationTime);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
         String message = "Tasks to do:\n" +
                 tasks.stream().map(task -> {
                     List<Integer> tagIds = tagRepository.getTagMaps(task.id());
@@ -94,7 +96,7 @@ public class NotificationService implements INotificationService {
                             task.title(),
                             groups.get(task.groupId()).name() + (tagIds.isEmpty() ? "" :
                                     ", " + tagIds.stream().map(tags::get).map(Tag::name).collect(Collectors.joining(", "))),
-                            sdf.format(task.dueDate()),
+                            DateFormat.DEFAULT().format(task.dueDate()),
                             notificationTags.get(task.id())
                     );
                 }).collect(Collectors.joining("\n"));
