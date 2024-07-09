@@ -1,6 +1,9 @@
 package tech.asari.todo.service;
 
+import com.slack.api.Slack;
+import com.slack.api.methods.SlackApiException;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tech.asari.todo.reposiotry.IGroupRepository;
 import tech.asari.todo.reposiotry.INotificationRepository;
@@ -12,9 +15,8 @@ import tech.asari.todo.reposiotry.domain.Task;
 import tech.asari.todo.util.DateFormat;
 import tech.asari.todo.util.NotificationTagParser;
 
+import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +25,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class NotificationService implements INotificationService {
+
+    @Value("${slack.bot.token}")
+    private String slackToken;
+    @Value("${slack.bot.channel}")
+    private String slackChannel;
 
     private final ITagRepository tagRepository;
     private final IGroupRepository groupRepository;
@@ -96,13 +103,18 @@ public class NotificationService implements INotificationService {
                             task.title(),
                             groups.get(task.groupId()).name() + (tagIds.isEmpty() ? "" :
                                     ", " + tagIds.stream().map(tags::get).map(Tag::name).collect(Collectors.joining(", "))),
-                            DateFormat.DEFAULT().format(task.dueDate()),
+                            DateFormat.NOTIFICATION().format(task.dueDate()),
                             notificationTags.get(task.id())
                     );
                 }).collect(Collectors.joining("\n"));
 
-        // TODO: Send notification
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.mmm").format(Calendar.getInstance().getTime()) + "\n" + message);
+        try {
+            Slack.getInstance().methods(slackToken).chatPostMessage(req -> req
+                    .channel(slackChannel)
+                    .text(message));
+        } catch (IOException | SlackApiException e) {
+            throw new RuntimeException(e);
+        }
 
         notificationRepo.setNotificationTimeNoticed(notificationTime, tasks.size());
     }

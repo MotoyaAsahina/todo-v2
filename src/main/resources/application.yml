@@ -30,6 +30,11 @@ spring:
             redirect-uri: OVERRIDE_BY_SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_REDIRECT_URI
             scope: email,profile
 
+slack:
+  bot:
+    token: OVERRIDE_BY_SLACK_BOT_TOKEN
+    channel: OVERRIDE_BY_SLACK_BOT_CHANNEL
+
 springdoc:
   swagger-ui:
     enabled: false
