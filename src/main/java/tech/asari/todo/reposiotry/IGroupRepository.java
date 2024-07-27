@@ -23,7 +23,9 @@ public interface IGroupRepository {
 
     void setArchived(int id, boolean archived);
 
-    int getLastOrder();
+    int getLastOrder(boolean activeOnly);
+
+    void setOrder(int id, int order);
 
     void moveDownAfter(int order);
 

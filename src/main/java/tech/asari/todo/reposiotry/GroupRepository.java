@@ -108,11 +108,20 @@ public class GroupRepository implements IGroupRepository {
     }
 
     @Override
-    public int getLastOrder() {
-        return client.sql("SELECT MAX(`order`) FROM `groups`")
+    public int getLastOrder(boolean activeOnly) {
+        return client.sql("SELECT MAX(`order`) FROM `groups`"
+                        + (activeOnly ? " WHERE deleted_at IS NULL AND archived_at IS NULL" : ""))
                 .query(Integer.class)
                 .optional()
                 .orElse(-1);
+    }
+
+    @Override
+    public void setOrder(int id, int order) {
+        client.sql("UPDATE `groups` SET `order` = :order WHERE id = :id")
+                .param("id", id)
+                .param("order", order)
+                .update();
     }
 
     @Override

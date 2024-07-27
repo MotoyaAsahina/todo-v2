@@ -39,7 +39,7 @@ public class GroupService implements IGroupService {
     @Transactional
     public ResponseGroup postGroup(RequestGroup requestGroup) {
         int newOrder;
-        int maxOrder = groupRepo.getLastOrder();
+        int maxOrder = groupRepo.getLastOrder(false);
         if (requestGroup.order() == null || requestGroup.order() < 0 || requestGroup.order() > maxOrder) {
             newOrder = maxOrder + 1;
         } else {
@@ -68,16 +68,32 @@ public class GroupService implements IGroupService {
 
     @Override
     public void deleteGroup(int id) {
+        int order = groupRepo.get(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).order();
+        int lastActiveOrder = groupRepo.getLastOrder(true);
+
+        groupRepo.moveUpBetween(order + 1, lastActiveOrder);
+
+        groupRepo.setOrder(id, lastActiveOrder);
         groupRepo.delete(id);
     }
 
     @Override
     public void restoreGroup(int id) {
+        int lastActiveOrder = groupRepo.getLastOrder(true);
         groupRepo.restore(id);
+        groupRepo.setOrder(id, lastActiveOrder + 1);
     }
 
     @Override
     public void putGroupArchived(int id, boolean archived) {
+        int lastActiveOrder = groupRepo.getLastOrder(true);
+        if (archived) {
+            int order = groupRepo.get(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).order();
+            groupRepo.moveUpBetween(order + 1, lastActiveOrder);
+            groupRepo.setOrder(id, lastActiveOrder);
+        } else {
+            groupRepo.setOrder(id, lastActiveOrder + 1);
+        }
         groupRepo.setArchived(id, archived);
     }
 }
