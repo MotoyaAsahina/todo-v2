@@ -16,6 +16,10 @@ public class DueDateParser {
     };
 
     public static Timestamp parseDueDate(String strDueDate) {
+        if (strDueDate == null || strDueDate.isEmpty()) {
+            return null;
+        }
+
         try {
             return Timestamp.valueOf(strDueDate);
         } catch (IllegalArgumentException ignored) {
