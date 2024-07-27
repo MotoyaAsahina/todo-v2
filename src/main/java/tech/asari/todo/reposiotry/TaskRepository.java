@@ -31,6 +31,8 @@ public class TaskRepository implements ITaskRepository {
             default -> throw new IllegalArgumentException("status must be one of 'done', 'undone', 'all'");
         }
 
+        sql += " ORDER BY due_date IS NULL, due_date";
+
         return client.sql(sql)
                 .query(Task.class)
                 .list();
