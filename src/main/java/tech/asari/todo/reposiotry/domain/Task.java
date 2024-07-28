@@ -15,6 +15,7 @@ public record Task(
         Timestamp dueDate,
         Timestamp doneAt,
         Timestamp createdAt,
+        Timestamp updatedAt,
         Timestamp deletedAt
 ) {
 
@@ -30,6 +31,7 @@ public record Task(
                 dueDate,
                 null,
                 createdAt,
+                null,
                 null
         );
     }
@@ -44,6 +46,7 @@ public record Task(
                 false,
                 requestTask.order(),
                 dueDate,
+                null,
                 null,
                 null,
                 null
@@ -62,6 +65,7 @@ public record Task(
                 task.dueDate(),
                 task.doneAt(),
                 task.createdAt(),
+                task.updatedAt(),
                 task.deletedAt()
         );
     }

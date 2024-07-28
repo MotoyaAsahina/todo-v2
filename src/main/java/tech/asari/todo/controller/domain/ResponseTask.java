@@ -20,6 +20,7 @@ public record ResponseTask(
         @Schema(nullable = true)
         Timestamp doneAt,
         Timestamp createdAt,
+        Timestamp updatedAt,
         @Schema(nullable = true)
         Timestamp deletedAt,
         List<Integer> tags,
@@ -37,6 +38,7 @@ public record ResponseTask(
                 task.dueDate(),
                 task.doneAt(),
                 task.createdAt(),
+                task.updatedAt(),
                 task.deletedAt(),
                 tags == null ? List.of() : tags,
                 notificationTags == null ? List.of() : notificationTags
