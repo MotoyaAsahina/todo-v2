@@ -27,6 +27,8 @@ public class TagRepository implements ITagRepository {
         String sql = "SELECT * FROM tags WHERE deleted_at IS NULL" +
                 (archived ? " AND archived_at IS NOT NULL" : " AND archived_at IS NULL");
 
+        sql += " ORDER BY name";
+
         return client.sql(sql)
                 .query(Tag.class)
                 .list();
@@ -110,7 +112,8 @@ public class TagRepository implements ITagRepository {
     @Override
     public Map<Integer, List<Integer>> getAllTagMaps(String status, boolean deleted) {
         String sql = "SELECT tag_maps.task_id, tag_maps.tag_id FROM tag_maps, tasks WHERE tag_maps.task_id = tasks.id"
-                + (deleted ? " AND tasks.deleted_at IS NOT NULL" : " AND tasks.deleted_at IS NULL");
+                + (deleted ? " AND tasks.deleted_at IS NOT NULL" : " AND tasks.deleted_at IS NULL")
+                + " AND tag_maps.tag_id IN (SELECT id FROM tags WHERE deleted_at IS NULL AND archived_at IS NULL)";
 
         switch (status) {
             case "done" -> sql += " AND tasks.done_at IS NOT NULL";
