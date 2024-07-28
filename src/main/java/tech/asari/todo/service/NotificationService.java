@@ -90,6 +90,11 @@ public class NotificationService implements INotificationService {
     public void notify(Timestamp notificationTime) {
         List<Task> tasks = notificationRepo.getActiveTasksByNotificationTime(notificationTime);
 
+        if (tasks.isEmpty()) {
+            notificationRepo.setNotificationTimeNoticed(notificationTime, 0);
+            return;
+        }
+
         Map<Integer, Group> groups =
                 groupRepository.getAll(false).stream().collect(Collectors.toMap(Group::id, Function.identity()));
         Map<Integer, Tag> tags =
