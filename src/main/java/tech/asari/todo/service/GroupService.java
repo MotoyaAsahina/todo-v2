@@ -72,26 +72,31 @@ public class GroupService implements IGroupService {
         int lastActiveOrder = groupRepo.getLastOrder(true);
 
         groupRepo.moveUpBetween(order + 1, lastActiveOrder);
-
         groupRepo.setOrder(id, lastActiveOrder);
+
         groupRepo.delete(id);
     }
 
     @Override
     public void restoreGroup(int id) {
+        int order = groupRepo.get(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).order();
         int lastActiveOrder = groupRepo.getLastOrder(true);
-        groupRepo.restore(id);
+
+        groupRepo.moveDownBetween(lastActiveOrder + 1, order - 1);
         groupRepo.setOrder(id, lastActiveOrder + 1);
+
+        groupRepo.restore(id);
     }
 
     @Override
     public void putGroupArchived(int id, boolean archived) {
         int lastActiveOrder = groupRepo.getLastOrder(true);
+        int order = groupRepo.get(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).order();
         if (archived) {
-            int order = groupRepo.get(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).order();
             groupRepo.moveUpBetween(order + 1, lastActiveOrder);
             groupRepo.setOrder(id, lastActiveOrder);
         } else {
+            groupRepo.moveDownBetween(lastActiveOrder + 1, order - 1);
             groupRepo.setOrder(id, lastActiveOrder + 1);
         }
         groupRepo.setArchived(id, archived);
